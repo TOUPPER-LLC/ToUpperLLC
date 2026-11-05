@@ -13,6 +13,16 @@ vi.mock('@aws-sdk/client-sesv2', () => ({
   },
 }));
 
+const publish = vi.fn();
+vi.mock('@aws-sdk/client-sns', () => ({
+  SNSClient: class {
+    send = publish;
+  },
+  PublishCommand: class {
+    constructor(public input: unknown) {}
+  },
+}));
+
 const { handler } = await import('./handler');
 
 const valid = { firstName: 'Jane', lastName: 'Doe', email: 'jane@doe.com', message: 'Hello there', company: '', elapsedMs: 8000 };
@@ -38,6 +48,7 @@ beforeEach(() => {
   vi.stubEnv('CONTACT_FROM_EMAIL', 'from@example.com');
   vi.stubEnv('CONTACT_TO_EMAIL', 'to@example.com');
   send.mockResolvedValue({ MessageId: 'abc' });
+  publish.mockResolvedValue({ MessageId: 'sns-1' });
   vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
@@ -45,6 +56,7 @@ afterEach(() => {
   vi.unstubAllEnvs();
   vi.restoreAllMocks();
   send.mockReset();
+  publish.mockReset();
 });
 
 describe('contact handler', () => {
@@ -133,5 +145,58 @@ describe('contact handler', () => {
     const res = await handler(event());
     expect(res.statusCode).toBe(500);
     expect(send).not.toHaveBeenCalled();
+  });
+});
+
+describe('contact handler without a sender address (SNS mode)', () => {
+  const TOPIC = 'arn:aws:sns:us-east-1:123456789012:contact';
+  type Published = { TopicArn: string; Subject: string; Message: string };
+  const publishedInput = () => (publish.mock.calls[0][0] as { input: Published }).input;
+
+  beforeEach(() => {
+    vi.stubEnv('CONTACT_FROM_EMAIL', '');
+    vi.stubEnv('CONTACT_TOPIC_ARN', TOPIC);
+  });
+
+  it('publishes the message to the SNS topic instead of SES', async () => {
+    const res = await handler(event());
+
+    expect(res.statusCode).toBe(200);
+    expect(send).not.toHaveBeenCalled();
+    expect(publish).toHaveBeenCalledTimes(1);
+    const input = publishedInput();
+    expect(input.TopicArn).toBe(TOPIC);
+    expect(input.Subject).toBe('New contact form message from Jane Doe');
+    expect(input.Message).toContain('Jane Doe');
+    expect(input.Message).toContain('jane@doe.com');
+    expect(input.Message).toContain('Hello there');
+  });
+
+  it('caps the SNS subject at 100 characters', async () => {
+    const long = 'A'.repeat(LIMITS.name);
+    await handler(event({ body: JSON.stringify({ ...valid, firstName: long, lastName: long }) }));
+    expect(publishedInput().Subject.length).toBeLessThanOrEqual(100);
+  });
+
+  it('returns 502 when SNS fails', async () => {
+    publish.mockRejectedValue(new Error('AuthorizationError'));
+    const res = await handler(event());
+    expect(res.statusCode).toBe(502);
+    expect(JSON.parse(res.body as string)).toEqual({ error: 'Unable to send message' });
+  });
+
+  it('returns 500 when neither a sender nor a topic is configured', async () => {
+    vi.stubEnv('CONTACT_TOPIC_ARN', '');
+    const res = await handler(event());
+    expect(res.statusCode).toBe(500);
+    expect(publish).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('prefers SES when a sender address is configured', async () => {
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'from@example.com');
+    await handler(event());
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(publish).not.toHaveBeenCalled();
   });
 });
