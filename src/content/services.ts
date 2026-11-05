@@ -11,7 +11,7 @@ export const SERVICES: readonly Service[] = [
     title: 'Web and mobile applications',
     summary: 'Websites, customer portals and internal tools, built to last.',
     detail:
-      'Customer-facing websites, portals and internal tools, from a single landing page to a full-stack platform. We build with React, Next.js, Django, FastAPI and Node.js, and make everything accessible and fast on any device.',
+      'Customer-facing websites, portals and internal tools, from a single landing page to a full platform with logins, payments and dashboards. Everything we build is fast, secure and easy to use on any device.',
   },
   {
     title: 'Cloud and DevOps',
