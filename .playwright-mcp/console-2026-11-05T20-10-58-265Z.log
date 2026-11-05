@@ -1,0 +1,9 @@
+[  622537ms] [ERROR] ContactSubmitError: Contact endpoint is not configured
+    at lr (http://localhost:5002/assets/index-Bo0PiWCY.js:9:92237)
+    at c (http://localhost:5002/assets/index-Bo0PiWCY.js:9:93093)
+    at Vf (http://localhost:5002/assets/index-Bo0PiWCY.js:8:138676)
+    at http://localhost:5002/assets/index-Bo0PiWCY.js:8:143407
+    at Pn (http://localhost:5002/assets/index-Bo0PiWCY.js:8:15173)
+    at Kf (http://localhost:5002/assets/index-Bo0PiWCY.js:8:139903)
+    at yh (http://localhost:5002/assets/index-Bo0PiWCY.js:9:42547)
+    at _h (http://localhost:5002/assets/index-Bo0PiWCY.js:9:42369) @ http://localhost:5002/assets/index-Bo0PiWCY.js:8
