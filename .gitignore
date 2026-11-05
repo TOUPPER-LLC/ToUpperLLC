@@ -7,3 +7,4 @@ dist
 .amplify
 amplify_outputs.json
 .npm
+.claude/launch.json
