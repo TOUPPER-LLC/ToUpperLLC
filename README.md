@@ -26,24 +26,27 @@ small Amplify Gen 2 backend that delivers contact form messages by email through
 index.html               Vite entry HTML
 src/
   main.tsx               App bootstrap, router, global CSS (load order matters)
-  App.tsx                Routes (all pages share components/Layout.tsx)
-  components/            Nav (mobile toggler), Footer, Layout, ProjectCard
-  pages/                 One component per route
+  App.tsx                Routes and redirects (all pages share components/Layout.tsx)
+  components/            Nav (mobile toggler), Footer, Layout, ConsultationCta
+  pages/                 One component per route (each sets its own <title>)
+  content/services.ts    Service descriptions used on Home and Services
+  content/work.ts        Projects shown on Our work (add new projects here)
   lib/contactClient.ts   Sends the contact form to the backend
-  styles/base.css        Site rules that load before Bootstrap
-  styles/app.css         Site rules that load after Bootstrap + responsive rules
+  styles/site.css        Theme (colors, type) and page styles, loaded after Bootstrap
 shared/contact.ts        Contact validation used by both the browser and the Lambda
 amplify/                 Amplify Gen 2 backend (contact Lambda, Function URL, SES access)
 amplify.yml              Amplify Hosting build settings
 ```
 
-Styling is Bootstrap 4.6 (CSS only, no Bootstrap JavaScript) plus the two site stylesheets.
+Styling is Bootstrap 5.3 (CSS only, no Bootstrap JavaScript) themed through its CSS variables in
+`src/styles/site.css`, with headings in Saira (self-hosted via `@fontsource-variable/saira`).
 
 ## How the contact form works
 
 The form validates input in the browser with `shared/contact.ts`, then POSTs JSON to a
 Lambda Function URL. The Lambda (`amplify/functions/contact/handler.ts`) validates again with
-the same rules, ignores bot submissions (a hidden "honeypot" field), and sends the message
+the same rules, silently drops likely bots (a hidden "honeypot" field, or a form submitted in
+under 3 seconds), and sends the message
 with SES to `CONTACT_TO_EMAIL`, from `CONTACT_FROM_EMAIL`, with the visitor's address as
 Reply-To so you can answer directly. The Function URL is published to the site at build time
 through `amplify_outputs.json`.
