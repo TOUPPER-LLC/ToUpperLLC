@@ -47,10 +47,6 @@ export default function About() {
             every project, large or small: code review, automated tests, infrastructure defined in code, and monitoring
             once it&apos;s live.
           </p>
-          <p className="about-stack">
-            Tools we use often: Python, TypeScript, React, Django, FastAPI, Node.js, PostgreSQL, AWS, Azure, Terraform,
-            Docker and Kubernetes.
-          </p>
 
           <h2>Working with us</h2>
           <p>

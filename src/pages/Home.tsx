@@ -8,10 +8,12 @@ export default function Home() {
       <title>ToUpper LLC | Custom software, cloud, data and AI</title>
       <section className="hero">
         <img src={logo} className="hero-logo" alt="logo" />
-        <h1 className="hero-title">Software that moves your business up</h1>
+        <h1 className="hero-title">
+          <span>We build the software.</span> <span>You grow the business.</span>
+        </h1>
         <p className="hero-lede">
-          ToUpper designs, builds and runs web applications, cloud infrastructure, data pipelines and AI tools for
-          businesses of every size.
+          Websites, apps, cloud systems and automation that takes busywork off your plate. One experienced team
+          plans it, builds it and keeps it running.
         </p>
         <div className="hero-actions">
           <Link to="/contact" className="btn btn-primary btn-lg">

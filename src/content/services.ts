@@ -15,9 +15,9 @@ export const SERVICES: readonly Service[] = [
   },
   {
     title: 'Cloud and DevOps',
-    summary: 'Reliable hosting on AWS, Azure or Oracle Cloud with automated releases.',
+    summary: 'Reliable hosting on AWS, Google Cloud, Azure or Oracle Cloud with automated releases.',
     detail:
-      'Infrastructure on AWS, Azure and Oracle Cloud defined as code with Terraform, packaged with Docker and Kubernetes, and shipped through CI/CD pipelines so releases are routine instead of risky.',
+      'Infrastructure on AWS, Google Cloud (GCP), Azure and Oracle Cloud defined as code with Terraform, packaged with Docker and Kubernetes, and shipped through CI/CD pipelines so releases are routine instead of risky.',
   },
   {
     title: 'Data engineering and reporting',
