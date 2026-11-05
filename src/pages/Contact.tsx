@@ -54,17 +54,14 @@ export default function Contact() {
   const describedBy = (name: ContactField) => (errors[name] ? `${name}-error` : undefined);
 
   return (
-    <div className="controls">
-      <div className="row">
-        <div className="col-md-6">
-          <div className="form-group" />
-        </div>
-        <div className="container">
-          <div className="center">
-            <form className="contact-form" onSubmit={handleSubmit} noValidate>
+    <div className="page">
+      <title>Contact us | ToUpper LLC</title>
+      <h1 className="page-title">Contact us</h1>
+      <p className="page-lede">Tell us about your project or question. Your first consultation is free.</p>
+            <form className="contact-form text-start" onSubmit={handleSubmit} noValidate>
               {FIELDS.map(({ name, label, type, placeholder }) => (
-                <div key={name} className="form-group">
-                  <label htmlFor={name}>{label}</label>
+                <div key={name} className="mb-3">
+                  <label htmlFor={name} className="form-label">{label}</label>
                   <input
                     id={name}
                     name={name}
@@ -80,8 +77,8 @@ export default function Contact() {
                   {feedback(name)}
                 </div>
               ))}
-              <div className="form-group">
-                <label htmlFor="message">Message</label>
+              <div className="mb-3">
+                <label htmlFor="message" className="form-label">Message</label>
                 <textarea
                   id="message"
                   name="message"
@@ -116,13 +113,10 @@ export default function Contact() {
                 </div>
               )}
 
-              <button className="d-inline-block btn btn-primary" type="submit" disabled={status === 'sending'}>
+              <button className="btn btn-primary btn-lg w-100" type="submit" disabled={status === 'sending'}>
                 {status === 'sending' ? 'Sending…' : 'Send'}
               </button>
             </form>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

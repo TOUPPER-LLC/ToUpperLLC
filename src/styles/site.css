@@ -1,0 +1,393 @@
+/*
+ * ToUpper site theme, loaded after Bootstrap 5.
+ * Palette: white paper, Bootstrap's ink, the logo's blue for accents and a deeper
+ * shade of it for anything clickable (the logo blue is too light for text on white).
+ */
+
+:root {
+  --tu-logo-blue: #1a8ff8;
+  --tu-action-blue: #0a6ccf;
+  --tu-action-blue-hover: #0858a9;
+  --tu-mist: #f3f8fe;
+  --tu-line: #e5e5e5;
+  --tu-heading-font: 'Saira Variable', system-ui, sans-serif;
+
+  --bs-primary: var(--tu-action-blue);
+  --bs-primary-rgb: 10, 108, 207;
+  --bs-link-color: var(--tu-action-blue);
+  --bs-link-color-rgb: 10, 108, 207;
+  --bs-link-hover-color: var(--tu-action-blue-hover);
+  --bs-link-hover-color-rgb: 8, 88, 169;
+  --bs-border-color: var(--tu-line);
+  --bs-focus-ring-color: rgba(26, 143, 248, 0.35);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--tu-heading-font);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--tu-action-blue);
+  --bs-btn-border-color: var(--tu-action-blue);
+  --bs-btn-hover-bg: var(--tu-action-blue-hover);
+  --bs-btn-hover-border-color: var(--tu-action-blue-hover);
+  --bs-btn-active-bg: var(--tu-action-blue-hover);
+  --bs-btn-active-border-color: var(--tu-action-blue-hover);
+  --bs-btn-disabled-bg: var(--tu-action-blue);
+  --bs-btn-disabled-border-color: var(--tu-action-blue);
+}
+
+:focus-visible {
+  outline: 3px solid var(--tu-logo-blue);
+  outline-offset: 2px;
+}
+
+/* ---------- Layout ---------- */
+
+/* Keep the original 1140px content width on very wide screens (Bootstrap 5 widens to 1320px). */
+@media (min-width: 1400px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.App > main {
+  flex: 1 0 auto;
+}
+
+.site-nav {
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+.site-nav .nav-link {
+  position: relative;
+  color: var(--bs-body-color);
+}
+
+.site-nav .nav-link:hover {
+  color: var(--tu-action-blue);
+}
+
+.site-nav .nav-link.active {
+  font-weight: 600;
+  color: var(--bs-body-color);
+}
+
+@media (min-width: 768px) {
+  .site-nav .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: var(--bs-navbar-nav-link-padding-x);
+    right: var(--bs-navbar-nav-link-padding-x);
+    bottom: -0.55rem;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--tu-logo-blue);
+  }
+}
+
+.site-footer {
+  border-top: 1px solid var(--tu-line);
+  line-height: 60px;
+  color: var(--bs-secondary-color);
+  text-align: center;
+}
+
+/* Left-aligned heading block for wide pages (Services, Our work). */
+.page-header {
+  padding: 3rem 0 2.5rem;
+  text-align: left;
+}
+
+.page-header .page-lede {
+  margin: 0;
+}
+
+/* A readable, centred column for text pages. */
+.page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1rem 4rem;
+  text-align: center;
+}
+
+.page-title {
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+  margin-bottom: 0.75rem;
+}
+
+.page-lede {
+  font-size: 1.2rem;
+  color: var(--bs-secondary-color);
+  max-width: 40rem;
+  margin: 0 auto 2.5rem;
+}
+
+/* ---------- Home ---------- */
+
+.hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem 4rem;
+}
+
+.hero-logo {
+  height: min(32vmin, 280px);
+  width: auto;
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: clamp(2.25rem, 1.2rem + 4.2vw, 4rem);
+  line-height: 1.05;
+  font-weight: 650;
+  max-width: 18ch;
+  margin: 1.5rem auto 1rem;
+}
+
+.hero-lede {
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.3rem);
+  color: var(--bs-secondary-color);
+  max-width: 38rem;
+  margin: 0 auto 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.band {
+  background: var(--tu-mist);
+  border-top: 1px solid var(--tu-line);
+  border-bottom: 1px solid var(--tu-line);
+  padding: 3.5rem 0;
+}
+
+.band h2 {
+  margin-bottom: 2rem;
+}
+
+/* ---------- Services ---------- */
+
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 2rem 3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.service-list li {
+  border-top: 3px solid var(--tu-logo-blue);
+  padding-top: 1rem;
+}
+
+.service-list h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.service-list p {
+  margin: 0;
+  color: var(--bs-secondary-color);
+}
+
+.section {
+  padding: 3.5rem 0;
+}
+
+.section > h2 {
+  margin-bottom: 2rem;
+}
+
+.steps {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.steps li {
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background: var(--tu-action-blue);
+  color: #fff;
+  font-family: var(--tu-heading-font);
+  font-weight: 600;
+}
+
+.steps h3 {
+  font-size: 1.15rem;
+}
+
+.steps p {
+  color: var(--bs-secondary-color);
+  margin: 0;
+}
+
+.cta {
+  text-align: center;
+  padding: 3.5rem 1rem;
+}
+
+.band > .cta {
+  padding-block: 0;
+}
+
+.cta h2 {
+  margin-bottom: 0.75rem;
+}
+
+.cta p {
+  color: var(--bs-secondary-color);
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- About ---------- */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+  gap: 3rem;
+  align-items: start;
+  text-align: left;
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+.about-copy {
+  font-size: 1.1rem;
+  max-width: 40rem;
+}
+
+.about-copy p {
+  line-height: 1.7;
+}
+
+.about-figure {
+  margin: 0;
+  position: sticky;
+  top: 1.5rem;
+}
+
+.about-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .about-figure {
+    position: static;
+    order: -1;
+  }
+
+  .about-figure img {
+    max-height: 22rem;
+    object-fit: cover;
+  }
+}
+
+/* ---------- Our work ---------- */
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.work-card .card-img-top {
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  background: var(--bs-tertiary-bg);
+  border-bottom: 1px solid var(--tu-line);
+}
+
+.work-card .card-title {
+  font-size: 1.2rem;
+}
+
+/* ---------- Contact ---------- */
+
+.contact-form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------- Text pages ---------- */
+
+.prose {
+  text-align: left;
+}
+
+.prose p {
+  line-height: 1.75;
+  margin-bottom: 1.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

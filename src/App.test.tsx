@@ -17,22 +17,47 @@ describe('App routes', () => {
     expect(screen.getByAltText('logo')).toBeInTheDocument();
   });
 
-  it('renders the about copy', () => {
+  it('renders the about page about the company', () => {
     renderAt('/about');
-    expect(screen.getByText(/Since 2019, we have been providing/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'About ToUpper' })).toBeInTheDocument();
   });
 
-  it('renders the apps card with an external link', () => {
+  it('redirects the retired /apps page to home', () => {
     renderAt('/apps');
-    expect(screen.getByText('Krazy Ball')).toBeInTheDocument();
-    const link = screen.getByRole('link', { name: 'Open' });
-    expect(link).toHaveAttribute('href', 'https://play.google.com/store/apps/details?id=com.ToUpperLLC.BallKrazy&hl=en_US');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    expect(screen.getByAltText('logo')).toBeInTheDocument();
   });
 
-  it('renders the websites card with an external link', () => {
+  it('redirects /websites to Our Work', () => {
     renderAt('/websites');
+    expect(screen.getByRole('heading', { level: 1, name: 'Our work' })).toBeInTheDocument();
+  });
+
+  it('home leads visitors to a consultation', () => {
+    renderAt('/');
+    expect(screen.getByRole('link', { name: 'Get a free consultation' })).toHaveAttribute('href', '/contact');
+  });
+
+  it('renders the services page including AI tooling', () => {
+    renderAt('/services');
+    expect(screen.getByRole('heading', { level: 1, name: 'Services' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /AI/ })).toBeInTheDocument();
+  });
+
+  it('nav lists the site sections in order', () => {
+    renderAt('/');
+    const nav = screen.getByRole('navigation');
+    expect(within(nav).getAllByRole('link').map((a) => a.textContent)).toEqual([
+      'Home',
+      'About',
+      'Services',
+      'Our work',
+      'Contact us',
+      'Privacy',
+    ]);
+  });
+
+  it('renders the Our Work card with an external link', () => {
+    renderAt('/work');
     expect(screen.getByText('Say No To Bugs')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Open' })).toHaveAttribute('href', 'http://saynotobugsflorida.com/');
   });
@@ -55,6 +80,6 @@ describe('App routes', () => {
   it.each(['/', '/about', '/contact', '/nope'])('shows the current year in the footer on %s', (path) => {
     renderAt(path);
     const footer = screen.getByRole('contentinfo');
-    expect(within(footer).getByText(`© ${new Date().getFullYear()}`)).toBeInTheDocument();
+    expect(footer).toHaveTextContent(`© ${new Date().getFullYear()} ToUpper LLC`);
   });
 });

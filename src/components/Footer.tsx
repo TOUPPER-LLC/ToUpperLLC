@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <footer className="border-top footer text-muted">
-      <div className="container">&copy; {new Date().getFullYear()}</div>
+    <footer className="site-footer">
+      <div className="container">&copy; {new Date().getFullYear()} ToUpper LLC</div>
     </footer>
   );
 }

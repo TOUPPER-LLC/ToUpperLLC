@@ -39,7 +39,7 @@ describe('Nav', () => {
     await user.click(screen.getByRole('link', { name: 'About' }));
 
     expect(collapse()).not.toHaveClass('show');
-    expect(screen.getByText(/Since 2019, we have been providing/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'About ToUpper' })).toBeInTheDocument();
   });
 
   it('menu closes when tapping the current page link', async () => {

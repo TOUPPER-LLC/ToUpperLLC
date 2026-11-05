@@ -1,65 +1,46 @@
-import { Fragment } from 'react';
 import codeImage from '../assets/img/code2.jpg';
-
-// Each inner array is one paragraph; each string is one line on desktop.
-// Line breaks are intentional (they shape the text column next to the image)
-// and are collapsed on small screens via CSS.
-const PARAGRAPHS: readonly (readonly string[])[] = [
-  [
-    'Since 2019, we have been providing users and clients the best',
-    'experience when it comes to our product suite. At ToUpper LLC,',
-    'we pride and distinguish ourselves by using the most cutting',
-    'edge technology and efficient techniques when developing',
-    'applications. We strive to produce the most elegant and',
-    'easy-to-use applications for our clients to enhance their',
-    'business.',
-  ],
-  [
-    'During our planning process, we strategize to map out',
-    'a robust project timeline in order to make sure that your',
-    'desired launch date is met. In order to ensure that your',
-    'application(s) is customer ready, we profusely test our',
-    'application(s) to ensure the highest level of security',
-    'is applied, weddle out any bugs, and solve any issues',
-    'that may arise during implementation. We also offer',
-    'publishing services once your project is completed,',
-    'as well as any maintenance that your application(s)',
-    'may require. If you are interested in cloud services',
-    'or cloud deployment, we will be happy to consult',
-    'with you to determine the best possible outcome.',
-  ],
-  [
-    "Let the geeks help! We know creating a website isn't easy,",
-    'so let us do the hard work for you. Please contact us and',
-    'provide any questions or comments you may have! We',
-    'will be happy to provide a free first consultation.',
-  ],
-];
+import ConsultationCta from '../components/ConsultationCta';
 
 export default function About() {
   return (
-    <div className="about">
-      <figure className="about-figure">
-        <img src={codeImage} alt="Developer writing code at a laptop and monitors" />
-      </figure>
-      <p className="App-style">
-        {PARAGRAPHS.map((lines, p) => (
-          <Fragment key={p}>
-            {p > 0 && (
-              <>
-                <br className="paragraph-break" />
-                <br className="paragraph-break" />
-              </>
-            )}
-            {lines.map((line, i) => (
-              <Fragment key={i}>
-                {i > 0 && <br />}
-                {line}{' '}
-              </Fragment>
-            ))}
-          </Fragment>
-        ))}
-      </p>
-    </div>
+    <>
+      <title>About | ToUpper LLC</title>
+      <div className="container about">
+        <div className="about-copy">
+          <h1 className="page-title">About ToUpper</h1>
+          <p className="page-lede ms-0">
+            ToUpper LLC is a software consultancy that helps organizations plan, build and run the software they depend
+            on.
+          </p>
+          <p>
+            Since 2019 we have built customer-facing websites, internal tools, cloud infrastructure and the data
+            pipelines behind them. Our engineers bring more than eight years of experience from enterprise cloud,
+            financial services and cybersecurity, where the stakes are high and downtime is not an option.
+          </p>
+          <p>
+            That experience shows up in the results. Our team has led data migrations measured in terabytes that cut
+            infrastructure spending by tens of millions of dollars a year, built a company data warehouse from zero to
+            more than a million records, automated invoicing for thousands of customers so a manual billing process
+            disappeared, and turned three-day reporting work into a task that takes seconds.
+          </p>
+          <p>
+            We bring the same discipline to every project, large or small. We plan around your launch date, test
+            thoroughly, follow security best practices and stay on after launch for maintenance, patching and cloud
+            support. Our team holds Oracle Cloud Foundations and Oracle Cloud AI certifications and works in both
+            English and Spanish.
+          </p>
+          <p>
+            We also help teams put AI to work responsibly: assistants grounded in your own documents, automatic
+            generation of reports and invoices, and language models hosted privately in your own cloud.
+          </p>
+        </div>
+        <figure className="about-figure">
+          <img src={codeImage} alt="Developer writing code at a laptop and monitors" width={988} height={1480} />
+        </figure>
+      </div>
+      <div className="band">
+        <ConsultationCta title="Let the geeks help" />
+      </div>
+    </>
   );
 }
