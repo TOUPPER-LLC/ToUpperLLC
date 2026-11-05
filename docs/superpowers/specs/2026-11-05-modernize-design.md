@@ -34,7 +34,7 @@ experience and replace the (likely dead) contact form with an AWS-native email p
 |--------------|---------------------------------|-----------------------------------------|
 | Build        | Create React App 3.4 (react-scripts) | Vite (latest stable)               |
 | UI           | React 16                        | React 19                                |
-| Routing      | react-router-dom 5 (`Switch`)   | react-router 7, library mode            |
+| Routing      | react-router-dom 5 (`Switch`)   | react-router 8, library mode            |
 | Language     | JavaScript                      | TypeScript (strict)                     |
 | Styling      | 10k-line `App.css` incl. pasted Bootstrap 4 | `bootstrap@4.6.2` CSS + ~100 lines custom CSS |
 | Tests        | Jest via react-scripts (unused) | Vitest + Testing Library + jsdom        |
@@ -67,7 +67,7 @@ src/
   pages/
     Home.tsx About.tsx Apps.tsx Websites.tsx Contact.tsx Privacy.tsx Sent.tsx NotFound.tsx
   lib/
-    contact.ts             # shared validation + submitContact() fetch client
+    contactClient.ts       # submitContact() fetch client (validation lives in /shared/contact.ts)
   styles/
     base.css               # custom rules that load before Bootstrap
     app.css                # custom rules that load after Bootstrap + mobile media queries
@@ -114,7 +114,7 @@ blocks, or are layout changes that render identically on desktop.
 - Fields unchanged: First Name, Last Name, Email, Message, same placeholders and labels,
   same `btn btn-primary` "Send" button.
 - Controlled form with `useState`; `status: 'idle' | 'sending' | 'error'`.
-- Validation (shared rules in `lib/contact.ts`, also used by the Lambda):
+- Validation (shared rules in `shared/contact.ts`, also used by the Lambda):
   first/last name required, ≤100 chars; email required, valid format, ≤254 chars;
   message required, ≤5000 chars.
   Errors shown with Bootstrap's `is-invalid` / `invalid-feedback` classes.
