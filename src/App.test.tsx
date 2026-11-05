@@ -59,7 +59,20 @@ describe('App routes', () => {
   it('renders the Our Work card with an external link', () => {
     renderAt('/work');
     expect(screen.getByText('Say No To Bugs')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Open' })).toHaveAttribute('href', 'http://saynotobugsflorida.com/');
+    expect(screen.getAllByRole('link', { name: 'Open' })[2]).toHaveAttribute('href', 'http://saynotobugsflorida.com/');
+  });
+
+  it('lists every project on Our work with a link to the live site', () => {
+    renderAt('/work');
+    const links = screen.getAllByRole('link', { name: 'Open' }).map((a) => a.getAttribute('href'));
+    expect(links).toEqual(['https://aboveparcapital.com/', 'https://yieldbadger.com/', 'http://saynotobugsflorida.com/']);
+  });
+
+  it('about page explains automation and AI in plain sections', () => {
+    renderAt('/about');
+    for (const name of ['What we do', 'Automation', 'AI, used carefully', 'Experience', 'Working with us']) {
+      expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
+    }
   });
 
   it('renders the privacy policy', () => {

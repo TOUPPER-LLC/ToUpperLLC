@@ -9,29 +9,53 @@ export default function About() {
         <div className="about-copy">
           <h1 className="page-title">About ToUpper</h1>
           <p className="page-lede ms-0">
-            ToUpper LLC is a software consultancy that helps organizations plan, build and run the software they depend
-            on.
+            We&apos;re a small software company that builds websites, apps and the systems behind them, then stays
+            around to keep them running. We&apos;ve been doing it since 2019.
           </p>
+
+          <h2>What we do</h2>
           <p>
-            Since 2019 we have built customer-facing websites, internal tools, cloud infrastructure and the data
-            pipelines behind them. Our engineers bring more than eight years of experience from enterprise cloud,
-            financial services and cybersecurity, where the stakes are high and downtime is not an option.
+            Some clients come to us for a new website. Others need an internal tool, a better way to handle their data,
+            or help moving off an old system that has become slow or expensive. Whatever the size, we can handle the
+            whole job: planning, building, hosting and maintenance.
           </p>
+
+          <h2>Automation</h2>
           <p>
-            That experience shows up in the results. Our team has led data migrations measured in terabytes that cut
-            infrastructure spending by tens of millions of dollars a year, built a company data warehouse from zero to
-            more than a million records, automated invoicing for thousands of customers so a manual billing process
-            disappeared, and turned three-day reporting work into a task that takes seconds.
+            A lot of our work is automation: finding the tasks someone does by hand every week and having software do
+            them instead. A few examples from projects our team has worked on:
           </p>
+          <ul>
+            <li>Invoices for thousands of customers, created and emailed automatically every two weeks.</li>
+            <li>Security reports that used to take about three days to write, now produced in seconds.</li>
+            <li>Daily data imports and reports that run on their own and only alert someone when something is off.</li>
+          </ul>
+          <p>The result is fewer mistakes, faster turnaround, and people freed up for work that needs a person.</p>
+
+          <h2>AI, used carefully</h2>
           <p>
-            We bring the same discipline to every project, large or small. We plan around your launch date, test
-            thoroughly, follow security best practices and stay on after launch for maintenance, patching and cloud
-            support. Our team holds Oracle Cloud Foundations and Oracle Cloud AI certifications and works in both
-            English and Spanish.
+            We use AI where it clearly helps, like answering questions from your own documents, drafting routine
+            paperwork or sorting incoming requests. When privacy matters, we can run the models inside your own cloud
+            account so your data stays with you. And if a simple script would do the job better, we&apos;ll tell you.
           </p>
+
+          <h2>Experience</h2>
           <p>
-            We also help teams put AI to work responsibly: assistants grounded in your own documents, automatic
-            generation of reports and invoices, and language models hosted privately in your own cloud.
+            Our engineers have spent more than eight years building software for a major cloud provider, a lending
+            company and a cybersecurity firm. That work includes moving terabytes of data between databases, building a
+            data warehouse from scratch, and maintaining systems used by millions of people. We bring the same habits to
+            every project, large or small: code review, automated tests, infrastructure defined in code, and monitoring
+            once it&apos;s live.
+          </p>
+          <p className="about-stack">
+            Tools we use often: Python, TypeScript, React, Django, FastAPI, Node.js, PostgreSQL, AWS, Azure, Terraform,
+            Docker and Kubernetes.
+          </p>
+
+          <h2>Working with us</h2>
+          <p>
+            You talk directly to the engineers doing the work. We agree on a clear plan and price up front, show you
+            progress as we go, and explain our decisions in plain language. We work in English and Spanish.
           </p>
         </div>
         <figure className="about-figure">

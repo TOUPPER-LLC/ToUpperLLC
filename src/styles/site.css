@@ -138,6 +138,7 @@ p {
 
 .page-lede {
   font-size: 1.2rem;
+  line-height: 1.6;
   color: var(--bs-secondary-color);
   max-width: 40rem;
   margin: 0 auto 2.5rem;
@@ -302,8 +303,28 @@ p {
   max-width: 40rem;
 }
 
-.about-copy p {
+.about-copy p,
+.about-copy li {
   line-height: 1.7;
+}
+
+.about-copy h2 {
+  font-size: 1.45rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.about-copy ul {
+  padding-left: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.about-copy li + li {
+  margin-top: 0.35rem;
+}
+
+.about-stack {
+  color: var(--bs-secondary-color);
+  font-size: 1rem;
 }
 
 .about-figure {

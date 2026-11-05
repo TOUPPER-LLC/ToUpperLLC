@@ -8,7 +8,7 @@ export default function Work() {
       <div className="container">
         <header className="page-header">
           <h1 className="page-title">Our work</h1>
-          <p className="page-lede">A few of the websites and applications we have built for our clients.</p>
+          <p className="page-lede">A few of the websites and applications we have built.</p>
         </header>
         <div className="work-grid pb-5">
           {PROJECTS.map((project) => (
