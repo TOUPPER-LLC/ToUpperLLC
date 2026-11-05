@@ -1,6 +1,6 @@
 import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2';
 import type { APIGatewayProxyStructuredResultV2 as FunctionUrlResult, LambdaFunctionURLEvent } from 'aws-lambda';
-import { LIMITS, normalizeContact, validateContact, type ContactInput } from '../../../shared/contact';
+import { isLikelyBot, LIMITS, normalizeContact, validateContact, type ContactInput } from '../../../shared/contact';
 
 const ses = new SESv2Client({});
 
@@ -45,8 +45,9 @@ export async function handler(event: LambdaFunctionURLEvent): Promise<FunctionUr
   }
 
   const input = normalizeContact(parsed);
-  // Bots fill the hidden field; pretend success so they don't retry.
-  if (input.company) return json(200, { ok: true });
+  const elapsedMs = (parsed as { elapsedMs?: unknown } | null)?.elapsedMs;
+  // Answer bots with a normal success so they have no signal to adapt to; nothing is sent.
+  if (isLikelyBot(input, typeof elapsedMs === 'number' ? elapsedMs : undefined)) return json(200, { ok: true });
 
   const errors = validateContact(input);
   if (Object.keys(errors).length > 0) return json(400, { errors });

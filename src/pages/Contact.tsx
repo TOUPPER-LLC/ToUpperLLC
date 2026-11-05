@@ -18,6 +18,7 @@ export default function Contact() {
   const [values, setValues] = useState<FormState>(EMPTY);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle');
+  const [startedAt] = useState(() => Date.now());
 
   function handleChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.target;
@@ -35,7 +36,7 @@ export default function Contact() {
 
     setStatus('sending');
     try {
-      await submitContact(input);
+      await submitContact(input, startedAt);
       navigate('/sent');
     } catch (error) {
       console.error(error);

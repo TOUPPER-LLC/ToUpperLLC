@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import Contact from './Contact';
+import { MIN_FILL_MS } from '../../shared/contact';
 import Sent from './Sent';
 
 const URL = 'https://contact.example.com/';
@@ -19,19 +20,27 @@ function renderContact() {
   );
 }
 
-async function fillForm(user: ReturnType<typeof userEvent.setup>) {
+function setupUser() {
+  return userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+}
+
+/** Fills the form the way a person would, taking `seconds` of (fake) time. */
+async function fillForm(user: ReturnType<typeof userEvent.setup>, seconds = 10) {
   await user.type(screen.getByLabelText('First Name'), '  Jane ');
   await user.type(screen.getByLabelText('Last Name'), 'Doe');
   await user.type(screen.getByLabelText('Email'), 'jane@doe.com');
   await user.type(screen.getByLabelText('Message'), 'Hello!');
+  vi.advanceTimersByTime(seconds * 1000);
 }
 
 beforeEach(() => {
+  vi.useFakeTimers({ shouldAdvanceTime: true });
   vi.stubEnv('VITE_CONTACT_URL', URL);
   vi.stubGlobal('fetch', fetchMock);
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
   fetchMock.mockReset();
@@ -39,7 +48,7 @@ afterEach(() => {
 
 describe('Contact', () => {
   it('shows field errors and does not submit when empty', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     const { container } = renderContact();
 
     await user.click(screen.getByRole('button', { name: 'Send' }));
@@ -50,7 +59,7 @@ describe('Contact', () => {
   });
 
   it('submits trimmed payload and navigates to /sent', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     fetchMock.mockResolvedValue(new Response('{"ok":true}', { status: 200 }));
     renderContact();
 
@@ -63,17 +72,34 @@ describe('Contact', () => {
     expect(url).toBe(URL);
     expect(init?.method).toBe('POST');
     expect(init?.headers).toEqual({ 'content-type': 'application/json' });
-    expect(JSON.parse(init?.body as string)).toEqual({
+    const { elapsedMs, ...payload } = JSON.parse(init?.body as string);
+    expect(payload).toEqual({
       firstName: 'Jane',
       lastName: 'Doe',
       email: 'jane@doe.com',
       message: 'Hello!',
       company: '',
     });
+    expect(elapsedMs).toBeGreaterThanOrEqual(10_000);
+  });
+
+  it('waits out the minimum fill time before sending a very fast submission', async () => {
+    const user = setupUser();
+    fetchMock.mockResolvedValue(new Response('{"ok":true}', { status: 200 }));
+    renderContact();
+
+    await fillForm(user, 0);
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'Sending…' })).toBeDisabled();
+
+    await vi.advanceTimersByTimeAsync(MIN_FILL_MS);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(fetchMock.mock.calls[0][1]?.body as string).elapsedMs).toBeGreaterThanOrEqual(MIN_FILL_MS);
   });
 
   it('disables submit while sending', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     fetchMock.mockReturnValue(new Promise(() => {}));
     renderContact();
 
@@ -88,7 +114,7 @@ describe('Contact', () => {
   });
 
   it('shows error on network failure', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
     renderContact();
 
@@ -101,7 +127,7 @@ describe('Contact', () => {
   });
 
   it('shows error on non-JSON 502', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     fetchMock.mockResolvedValue(new Response('<html>Bad gateway</html>', { status: 502 }));
     renderContact();
 
@@ -112,7 +138,7 @@ describe('Contact', () => {
   });
 
   it('shows error when no endpoint configured', async () => {
-    const user = userEvent.setup();
+    const user = setupUser();
     vi.stubEnv('VITE_CONTACT_URL', '');
     renderContact();
 

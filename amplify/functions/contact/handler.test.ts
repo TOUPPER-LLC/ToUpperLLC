@@ -15,7 +15,7 @@ vi.mock('@aws-sdk/client-sesv2', () => ({
 
 const { handler } = await import('./handler');
 
-const valid = { firstName: 'Jane', lastName: 'Doe', email: 'jane@doe.com', message: 'Hello there', company: '' };
+const valid = { firstName: 'Jane', lastName: 'Doe', email: 'jane@doe.com', message: 'Hello there', company: '', elapsedMs: 8000 };
 
 function event(overrides: Partial<{ method: string; body: string; isBase64Encoded: boolean }> = {}): LambdaFunctionURLEvent {
   return {
@@ -96,6 +96,20 @@ describe('contact handler', () => {
 
   it('drops honeypot submissions', async () => {
     const res = await handler(event({ body: JSON.stringify({ ...valid, company: 'Acme' }) }));
+    expect(res.statusCode).toBe(200);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('drops submissions made too quickly', async () => {
+    const res = await handler(event({ body: JSON.stringify({ ...valid, elapsedMs: 500 }) }));
+    expect(res.statusCode).toBe(200);
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('drops submissions without a fill time', async () => {
+    const { elapsedMs: _omit, ...rest } = valid;
+    void _omit;
+    const res = await handler(event({ body: JSON.stringify(rest) }));
     expect(res.statusCode).toBe(200);
     expect(send).not.toHaveBeenCalled();
   });

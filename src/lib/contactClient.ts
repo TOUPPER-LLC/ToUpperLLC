@@ -1,4 +1,4 @@
-import type { ContactInput } from '../../shared/contact';
+import { MIN_FILL_MS, type ContactInput } from '../../shared/contact';
 
 type AmplifyOutputs = { custom?: { contactUrl?: string } };
 
@@ -17,17 +17,27 @@ export function getContactUrl(): string | undefined {
   return import.meta.env.VITE_CONTACT_URL || outputs?.custom?.contactUrl || undefined;
 }
 
-/** Sends the message to the contact Lambda. Throws ContactSubmitError on any failure. */
-export async function submitContact(input: ContactInput): Promise<void> {
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Sends the message to the contact Lambda. `startedAt` is when the form was shown
+ * (Date.now()); the server treats very fast submissions as bots, so a person who submits
+ * sooner than MIN_FILL_MS waits out the difference instead of being dropped.
+ * Throws ContactSubmitError on any failure.
+ */
+export async function submitContact(input: ContactInput, startedAt: number): Promise<void> {
   const url = getContactUrl();
   if (!url) throw new ContactSubmitError('Contact endpoint is not configured');
+
+  const tooSoonBy = MIN_FILL_MS - (Date.now() - startedAt);
+  if (tooSoonBy > 0) await sleep(tooSoonBy);
 
   let response: Response;
   try {
     response = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(input),
+      body: JSON.stringify({ ...input, elapsedMs: Date.now() - startedAt }),
     });
   } catch (cause) {
     throw new ContactSubmitError('Network error', { cause });

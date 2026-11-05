@@ -72,3 +72,16 @@ export function validateContact(input: ContactInput): ContactErrors {
 
   return errors;
 }
+
+/** People need at least this long to fill in the form; scripts post instantly. */
+export const MIN_FILL_MS = 3000;
+
+/**
+ * Bot heuristics: the hidden honeypot field is filled, or the form was submitted faster
+ * than a person could type (or without the fill time the real form always sends).
+ */
+export function isLikelyBot(input: ContactInput, elapsedMs: number | undefined): boolean {
+  if (input.company) return true;
+  if (typeof elapsedMs !== 'number' || !Number.isFinite(elapsedMs)) return true;
+  return elapsedMs < MIN_FILL_MS;
+}

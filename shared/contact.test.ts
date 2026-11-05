@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LIMITS, normalizeContact, validateContact, type ContactInput } from './contact';
+import { isLikelyBot, LIMITS, MIN_FILL_MS, normalizeContact, validateContact, type ContactInput } from './contact';
 
 const valid: ContactInput = {
   firstName: 'Jane',
@@ -78,5 +78,24 @@ describe('normalizeContact', () => {
   it('handles non-object input', () => {
     expect(normalizeContact(null)).toEqual({ firstName: '', lastName: '', email: '', message: '', company: '' });
     expect(normalizeContact('hello')).toEqual({ firstName: '', lastName: '', email: '', message: '', company: '' });
+  });
+});
+
+describe('isLikelyBot', () => {
+  it('flags a filled honeypot', () => {
+    expect(isLikelyBot({ ...valid, company: 'Acme' }, MIN_FILL_MS + 1)).toBe(true);
+  });
+
+  it('flags submissions faster than a person can type', () => {
+    expect(isLikelyBot(valid, MIN_FILL_MS - 1)).toBe(true);
+  });
+
+  it('flags submissions without a fill time', () => {
+    expect(isLikelyBot(valid, undefined)).toBe(true);
+    expect(isLikelyBot(valid, Number.NaN)).toBe(true);
+  });
+
+  it('allows a normal submission', () => {
+    expect(isLikelyBot(valid, MIN_FILL_MS)).toBe(false);
   });
 });
