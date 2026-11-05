@@ -1,0 +1,9 @@
+node_modules
+dist
+*.local
+.DS_Store
+.baseline
+.superpowers
+.amplify
+amplify_outputs.json
+.npm
