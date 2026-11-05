@@ -4,7 +4,10 @@ backend:
     preBuild:
       commands:
         - nvm install 24 && nvm use 24
-        - npm ci --cache .npm --prefer-offline
+        # npm ci rejects this lockfile because of an npm bug with Amplify's bundled
+        # dependencies, so install from the lockfile and fail if it would change.
+        - npm install --cache .npm --prefer-offline --no-audit --no-fund
+        - git diff --exit-code package-lock.json
     build:
       commands:
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
