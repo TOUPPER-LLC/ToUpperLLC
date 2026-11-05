@@ -23,7 +23,7 @@ export const SERVICES: readonly Service[] = [
     title: 'Data engineering and reporting',
     summary: 'Pipelines and dashboards that turn scattered records into decisions.',
     detail:
-      'Systems that pull your records together from different tools, keep them current and turn them into clear reports, so leadership can see what is working and where to invest.',
+      'ETL pipelines, data warehouses and reports that pull your records together from different tools and keep them current, so leadership can see what is working and where to invest.',
   },
   {
     title: 'AI tooling and automation',
