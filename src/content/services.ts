@@ -17,13 +17,13 @@ export const SERVICES: readonly Service[] = [
     title: 'Cloud and DevOps',
     summary: 'Reliable hosting on AWS, Google Cloud, Azure or Oracle Cloud with automated releases.',
     detail:
-      'Infrastructure on AWS, Google Cloud (GCP), Azure and Oracle Cloud defined as code with Terraform, packaged with Docker and Kubernetes, and shipped through CI/CD pipelines so releases are routine instead of risky.',
+      'Hosting and infrastructure on AWS, Google Cloud (GCP), Azure and Oracle Cloud, set up so it is repeatable, secure and easy to scale. Updates go out through automated releases, so shipping changes is routine instead of risky.',
   },
   {
     title: 'Data engineering and reporting',
     summary: 'Pipelines and dashboards that turn scattered records into decisions.',
     detail:
-      'ETL pipelines, data warehouses and reports that pull your records together and keep them current, so leadership can see what is working and where to invest.',
+      'Systems that pull your records together from different tools, keep them current and turn them into clear reports, so leadership can see what is working and where to invest.',
   },
   {
     title: 'AI tooling and automation',
