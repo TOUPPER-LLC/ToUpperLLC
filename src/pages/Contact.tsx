@@ -7,7 +7,7 @@ export default function Contact() {
         </div>
         <div className="container">
           <div className="center">
-            <form className="contact-form" style={{ width: '400px' }}>
+            <form className="contact-form">
               <div className="form-group">
                 <label htmlFor="firstName">First Name</label>
                 <input id="firstName" className="form-control" type="text" name="firstName" placeholder="Jane" />

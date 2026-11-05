@@ -42,3 +42,63 @@
 .sent {
   padding-top: calc(145px + 9rem);
 }
+
+.contact-form {
+  width: 400px;
+}
+
+/* The empty Bootstrap .row on the contact page overhangs by its gutter; don't let it scroll. */
+.controls {
+  overflow-x: clip;
+}
+
+/* ---------- Small screens (phones) ---------- */
+
+@media (max-width: 767.98px) {
+  .about-figure {
+    float: none;
+    width: 100%;
+    height: auto;
+    padding: 0 1rem;
+  }
+
+  .about-figure img {
+    height: auto;
+    max-height: 70vh;
+  }
+
+  .App-style {
+    display: block;
+    margin: 1.5rem 1rem 2rem;
+    font-size: 1rem;
+  }
+
+  /* Desktop line breaks shape a column beside the image; on phones let text wrap. */
+  .App-style br:not(.paragraph-break) {
+    display: none;
+  }
+}
+
+/* Below desktop (lg), .center's fixed 145px padding leaves almost no room for content. */
+@media (max-width: 991.98px) {
+  .center {
+    width: 100%;
+    padding: 2rem 1rem;
+  }
+
+  .sent {
+    padding-top: 4rem;
+  }
+
+  .contact-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .word {
+    line-height: 2;
+  }
+}

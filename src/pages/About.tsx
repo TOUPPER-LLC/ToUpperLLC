@@ -47,7 +47,7 @@ export default function About() {
           <Fragment key={p}>
             {p > 0 && (
               <>
-                <br />
+                <br className="paragraph-break" />
                 <br className="paragraph-break" />
               </>
             )}
