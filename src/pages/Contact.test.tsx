@@ -40,6 +40,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  delete window.dataLayer;
   vi.useRealTimers();
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
@@ -156,5 +157,36 @@ describe('Contact', () => {
     expect(honeypot).toHaveAttribute('tabindex', '-1');
     expect(honeypot).toHaveAttribute('autocomplete', 'off');
     expect(honeypot.closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+
+  describe('lead tracking in production', () => {
+    beforeEach(() => vi.stubEnv('PROD', true));
+    const leads = () => (window.dataLayer ?? []).filter((e) => (e as { event?: string }).event === 'generate_lead');
+
+    it('pushes generate_lead, with no personal details, after a successful submit', async () => {
+      const user = setupUser();
+      fetchMock.mockResolvedValue(new Response('{"ok":true}', { status: 200 }));
+      renderContact();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('button', { name: 'Send' }));
+      await screen.findByRole('heading', { name: 'Thank you for contacting us' });
+
+      expect(leads()).toEqual([{ event: 'generate_lead', form: 'contact' }]);
+      const pushed = JSON.stringify(window.dataLayer);
+      for (const value of ['Jane', 'Doe', 'jane@doe.com', 'Hello!']) expect(pushed).not.toContain(value);
+    });
+
+    it('does not push generate_lead when sending fails', async () => {
+      const user = setupUser();
+      fetchMock.mockResolvedValue(new Response('{"ok":false}', { status: 500 }));
+      renderContact();
+
+      await fillForm(user);
+      await user.click(screen.getByRole('button', { name: 'Send' }));
+      await screen.findByRole('alert');
+
+      expect(leads()).toEqual([]);
+    });
   });
 });

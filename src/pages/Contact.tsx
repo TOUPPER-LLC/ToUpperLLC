@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { normalizeContact, validateContact, type ContactErrors, type ContactField } from '../../shared/contact';
+import { pushEvent } from '../lib/analytics';
 import { submitContact } from '../lib/contactClient';
 import Seo from '../components/Seo';
 
@@ -38,6 +39,7 @@ export default function Contact() {
     setStatus('sending');
     try {
       await submitContact(input, startedAt);
+      pushEvent({ event: 'generate_lead', form: 'contact' });
       navigate('/sent');
     } catch (error) {
       console.error(error);

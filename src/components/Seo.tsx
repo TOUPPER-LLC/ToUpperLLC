@@ -1,10 +1,12 @@
+import { usePageView } from '../lib/analytics';
 import { OG_IMAGE, PAGES, SITE_NAME, canonicalUrl, type PageKey, type PageSeo } from '../content/seo';
 
 /**
  * Title, description, canonical URL and share-card tags for one page. React 19 hoists these
- * into <head>, both in the browser and in the pre-rendered HTML.
+ * into <head>, both in the browser and in the pre-rendered HTML. Also records the page view.
  */
 export default function Seo({ page }: { page: PageKey }) {
+  usePageView();
   const { path, title, description, noindex } = PAGES[page] as PageSeo;
   const url = noindex ? undefined : canonicalUrl(path);
 
