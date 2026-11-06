@@ -61,40 +61,71 @@ under 3 seconds), and delivers the message to `CONTACT_TO_EMAIL` in one of two w
 
 The Function URL is published to the site at build time through `amplify_outputs.json`.
 
-## Deploying on Amplify
+## Hosting and deployment
 
-Amplify Hosting runs `amplify.yml`: it deploys the backend (`ampx pipeline-deploy`), which
-writes `amplify_outputs.json`, then builds the site. One-time setup in the AWS console:
+The site runs on **AWS Amplify Hosting** (app `ToUpperLLC`, region us-east-1), connected to the
+`master` branch of this repository. **Every push to `master` deploys to production.** Amplify runs
+`amplify.yml`: it deploys the backend (`ampx pipeline-deploy`), which writes
+`amplify_outputs.json`, then builds the site.
 
-1. **Set environment variables** (Amplify → Hosting → Environment variables), then redeploy.
-   They are read at deploy time, so changing one always needs a redeploy.
+- **Domains:** `https://toupperllc.com` and `https://www.toupperllc.com` (Route 53, HTTPS
+  certificate managed by Amplify), plus the default `https://master.d2r6usgstublsy.amplifyapp.com`.
+- **Service role:** the app's role has `AmplifyBackendDeployFullAccess` so it can deploy the backend.
 
-   | Variable                  | Value |
-   | ------------------------- | ----- |
-   | `CONTACT_TO_EMAIL`        | The inbox that should receive messages (Gmail is fine). |
-   | `CONTACT_ALLOWED_ORIGINS` | Every URL the site is served from, comma-separated, `https://`, no trailing slash, e.g. `https://master.<appid>.amplifyapp.com,https://yourdomain.com,https://www.yourdomain.com`. The `amplifyapp.com` URL is on the app's Overview page. If empty, any origin is accepted. |
-   | `CONTACT_FROM_EMAIL`      | Optional. Leave it out to use SNS. Set it to an address on your own domain to switch to SES. Don't use a Gmail/Hotmail address here: mail claiming to be from those providers but sent by AWS is treated as spoofed. |
+### Environment variables
 
-2. **Confirm delivery:**
-   - **SNS mode:** after the first deploy, `CONTACT_TO_EMAIL` receives an "AWS Notification -
-     Subscription Confirmation" email. Click **Confirm subscription** (check spam). Messages
-     sent before you confirm are not delivered.
-   - **SES mode:** verify your domain in SES (same region as the Amplify app) by adding the DKIM
-     records it gives you to DNS, and verify the receiving address too: new SES accounts are in a
-     *sandbox* that can only send to verified addresses. Production access is not needed.
-3. **Service role:** the app needs a service role that can deploy Gen 2 backends
-   (Amplify → App settings → IAM roles, with the `AmplifyBackendDeployFullAccess` managed policy).
-4. **SPA rewrite rule** (Amplify → Hosting → Rewrites and redirects) so deep links like `/about` load:
+Set in Amplify → Hosting → Environment variables. They're read when the backend deploys, so after
+changing one, redeploy (Overview → `master` → Redeploy this version).
 
-   | Source address | Target address | Type |
-   | -------------- | -------------- | ---- |
-   | `</^[^.]+$\|\.(?!(css\|gif\|ico\|jpg\|js\|png\|txt\|svg\|woff\|woff2\|ttf\|map\|json\|webp)$)([^.]+$)/>` | `/index.html` | 200 (Rewrite) |
+| Variable                  | Purpose |
+| ------------------------- | ------- |
+| `CONTACT_FROM_EMAIL`      | The `noreply@` address on the company domain that contact form emails are sent from (SES). Remove it to fall back to SNS. |
+| `CONTACT_TO_EMAIL`        | Where contact form messages are delivered: a Google Group on the company domain that forwards to the team. |
+| `CONTACT_ALLOWED_ORIGINS` | The site's URLs, comma-separated, `https://`, no trailing slash: `https://toupperllc.com,https://www.toupperllc.com,https://master.d2r6usgstublsy.amplifyapp.com`. Add any new domain here or the form will be refused there. |
 
-   In the console, enter the source without the backslashes (they're only escaping the table pipes here).
+### Email delivery
 
-The Lambda reserves 2 concurrent executions to cap abuse. If the deploy fails with an error about
-unreserved concurrency (some new accounts have a total limit of 10), request a higher Lambda
-concurrency quota or remove the `reservedConcurrentExecutions` line in `amplify/backend.ts`.
+- **SES** (us-east-1): the `toupperllc.com` domain is verified with Easy DKIM records in Route 53,
+  and a DMARC record (`p=none`) is published. Company mail itself runs on Google Workspace (MX and
+  SPF records in Route 53).
+- **The receiving Google Group must accept outside mail.** Contact form emails are sent by
+  Amazon's servers, so Google treats them as external even though they're from `noreply@`. In
+  Google Groups → the group → Group settings, *Who can post* is **Anyone on the web**, and the
+  Workspace admin setting *Groups for Business → Sharing settings → "Group owners can allow
+  incoming email from outside the organization"* is on. If messages stop arriving, check this
+  first, then the group's pending/moderation queue.
+
+### Rewrites and redirects
+
+Amplify → Hosting → Rewrites and redirects → Manage redirects (JSON editor). The pre-rendered
+pages (see SEO) each have their own rule; everything else falls back to the app shell. Order
+matters: the catch-all must be last.
+
+```json
+[
+  { "source": "/about", "target": "/about/index.html", "status": "200", "condition": null },
+  { "source": "/services", "target": "/services/index.html", "status": "200", "condition": null },
+  { "source": "/work", "target": "/work/index.html", "status": "200", "condition": null },
+  { "source": "/contact", "target": "/contact/index.html", "status": "200", "condition": null },
+  { "source": "/privacy", "target": "/privacy/index.html", "status": "200", "condition": null },
+  { "source": "/sitemap.xml", "target": "/sitemap.xml", "status": "200", "condition": null },
+  {
+    "source": "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>",
+    "target": "/200.html",
+    "status": "200",
+    "condition": null
+  }
+]
+```
+
+When you add a page, add it to `src/content/seo.ts`, `public/sitemap.xml` and a rule above.
+
+### Limits
+
+The contact Lambda reserves 2 concurrent executions to cap abuse and cost. If a deploy ever fails
+with an error about unreserved concurrency (some AWS accounts have a total limit of 10), request a
+higher Lambda concurrency quota or remove the `reservedConcurrentExecutions` line in
+`amplify/backend.ts`.
 
 ## Testing the contact form locally
 
@@ -122,36 +153,18 @@ Without either, the form shows its "couldn't be sent" message.
   each indexable page, and `dist/200.html` (the bare app shell). The browser still boots the app
   normally; the static tags are removed once React renders its own.
 
-  Amplify only serves those files once you add these rewrites **above** the existing SPA
-  catch-all rule (Amplify → Hosting → Rewrites and redirects → Manage → JSON editor). Order
-  matters: the catch-all must stay last.
+  Amplify serves them through the rules in [Rewrites and redirects](#rewrites-and-redirects).
 
-  ```json
-  [
-    { "source": "/about", "target": "/about/index.html", "status": "200", "condition": null },
-    { "source": "/services", "target": "/services/index.html", "status": "200", "condition": null },
-    { "source": "/work", "target": "/work/index.html", "status": "200", "condition": null },
-    { "source": "/contact", "target": "/contact/index.html", "status": "200", "condition": null },
-    { "source": "/privacy", "target": "/privacy/index.html", "status": "200", "condition": null },
-    { "source": "/sitemap.xml", "target": "/sitemap.xml", "status": "200", "condition": null }
-  ]
-  ```
-
-  The `/sitemap.xml` rule is needed because the catch-all rewrites any `.xml` file to
-  `/index.html`. Also change the catch-all's target from `/index.html` to `/200.html`, so
-  pages without their own file (`/sent`, unknown URLs) get the empty shell instead of briefly
-  showing the home page.
-
-**Owner steps (one-time):**
+**Growing traffic (when ready for clients):**
 
 1. [Google Search Console](https://search.google.com/search-console): add `toupperllc.com` as a
-   Domain property (verify with the DNS TXT record), then submit
+   Domain property (verify with a DNS TXT record in Route 53), then submit
    `https://toupperllc.com/sitemap.xml` under Sitemaps.
-2. [Google Business Profile](https://business.google.com): create a service-area business for
-   Tampa / Tampa Bay with the address hidden, category "Software company", website
+2. [Google Business Profile](https://business.google.com): a service-area business for Tampa /
+   Tampa Bay with the address hidden, category "Software company", website
    `https://toupperllc.com`, and the services listed on the site.
-3. Make sure `www.toupperllc.com` and the `amplifyapp.com` URL redirect (301) to
-   `https://toupperllc.com` (Amplify → Hosting → Custom domains / Rewrites and redirects).
+3. Optional: in Amplify → Custom domains, redirect `www` to the root domain so there's a single
+   address.
 
 ## Analytics (Google Tag Manager / GA4)
 
@@ -167,7 +180,8 @@ Events pushed to `window.dataLayer` (never names, emails or message text):
 | `page_view`     | Every page, including the first load           | `page_path`, `page_location`, `page_title` |
 | `generate_lead` | Contact form sent successfully, before `/sent` | `form: 'contact'` |
 
-**GTM setup** (tagmanager.google.com → container GTM-NQVKC3B5):
+**GTM configuration** (tagmanager.google.com → container GTM-NQVKC3B5), for reference if it's
+ever rebuilt:
 
 1. *Variables → User-Defined → New → Data Layer Variable* three times: `page_path`,
    `page_location`, `page_title` (name each `DLV - <field>`).
