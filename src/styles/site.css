@@ -113,6 +113,23 @@ p {
   text-align: center;
 }
 
+/* On phones the location goes on its own line instead of wrapping at the 60px line height. */
+@media (max-width: 767.98px) {
+  .site-footer {
+    line-height: 1.5;
+    padding: 1.25rem 0;
+  }
+
+  .site-footer .footer-sep {
+    display: none;
+  }
+
+  .site-footer .footer-location {
+    display: block;
+    font-size: 0.875rem;
+  }
+}
+
 /* Left-aligned heading block for wide pages (Services, Our work). */
 .page-header {
   padding: 3rem 0 2.5rem;
