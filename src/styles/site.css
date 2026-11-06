@@ -411,3 +411,12 @@ p {
     animation: none !important;
   }
 }
+
+.prose h2 {
+  font-size: 1.45rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.prose li + li {
+  margin-top: 0.35rem;
+}

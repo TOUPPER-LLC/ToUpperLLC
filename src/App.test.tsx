@@ -75,9 +75,20 @@ describe('App routes', () => {
     }
   });
 
-  it('renders the privacy policy', () => {
+  it('renders the privacy policy covering the contact form and Google Analytics', () => {
     renderAt('/privacy');
-    expect(screen.getByText(/understand the importance of privacy/)).toBeInTheDocument();
+    const main = screen.getByRole('main');
+    expect(screen.getByRole('heading', { level: 1, name: 'Privacy policy' })).toBeInTheDocument();
+    expect(main).toHaveTextContent(/Last updated: November 5, 2026/);
+    expect(main).toHaveTextContent(/contact form/i);
+    expect(main).toHaveTextContent(/Google Analytics/);
+    expect(main).not.toHaveTextContent(/App Store|Google Play|mobile app/i);
+    expect(screen.getByRole('link', { name: /opt-out browser add-on/i })).toHaveAttribute(
+      'href',
+      'https://tools.google.com/dlpage/gaoptout',
+    );
+    expect(within(main).getAllByRole('link', { name: /contact/i })[0]).toHaveAttribute('href', '/contact');
+    expect(main).not.toHaveTextContent(/@/);
   });
 
   it('renders the sent confirmation', () => {
