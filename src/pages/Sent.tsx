@@ -1,9 +1,10 @@
 import { Link } from 'react-router';
+import Seo from '../components/Seo';
 
 export default function Sent() {
   return (
     <div className="page">
-      <title>Message sent | ToUpper LLC</title>
+      <Seo page="sent" />
       <h1 className="page-title mt-5">Thank you for contacting us</h1>
       <p className="page-lede">We will reach out to you as soon as possible!</p>
       <Link to="/" className="btn btn-outline-secondary">

@@ -1,10 +1,11 @@
 import codeImage from '../assets/img/code2.jpg';
 import ConsultationCta from '../components/ConsultationCta';
+import Seo from '../components/Seo';
 
 export default function About() {
   return (
     <>
-      <title>About | ToUpper LLC</title>
+      <Seo page="about" />
       <div className="container about">
         <div className="about-copy">
           <h1 className="page-title">About ToUpper</h1>

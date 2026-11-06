@@ -1,7 +1,9 @@
+import Seo from '../components/Seo';
+
 export default function Privacy() {
   return (
     <div className="page prose">
-      <title>Privacy | ToUpper LLC</title>
+      <Seo page="privacy" />
       <h1 className="page-title">Privacy policy</h1>
       <p>
         We, at ToUpper LLC, understand the importance of privacy. When you use any of our applications, we try to make

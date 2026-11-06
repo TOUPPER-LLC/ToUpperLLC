@@ -1,11 +1,12 @@
 import { Link } from 'react-router';
 import logo from '../assets/img/Original.png';
 import { SERVICES } from '../content/services';
+import Seo from '../components/Seo';
 
 export default function Home() {
   return (
     <>
-      <title>ToUpper LLC | Custom software, cloud, data and AI</title>
+      <Seo page="home" />
       <section className="hero">
         <img src={logo} className="hero-logo" alt="logo" />
         <h1 className="hero-title">

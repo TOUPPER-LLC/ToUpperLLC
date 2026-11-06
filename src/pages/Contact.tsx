@@ -2,6 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { normalizeContact, validateContact, type ContactErrors, type ContactField } from '../../shared/contact';
 import { submitContact } from '../lib/contactClient';
+import Seo from '../components/Seo';
 
 type FormState = Record<ContactField | 'company', string>;
 
@@ -55,7 +56,7 @@ export default function Contact() {
 
   return (
     <div className="page">
-      <title>Contact us | ToUpper LLC</title>
+      <Seo page="contact" />
       <h1 className="page-title">Contact us</h1>
       <p className="page-lede">Tell us about your project or question. Your first consultation is free.</p>
             <form className="contact-form text-start" onSubmit={handleSubmit} noValidate>

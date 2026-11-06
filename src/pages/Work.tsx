@@ -1,10 +1,11 @@
 import ConsultationCta from '../components/ConsultationCta';
 import { PROJECTS } from '../content/work';
+import Seo from '../components/Seo';
 
 export default function Work() {
   return (
     <>
-      <title>Our work | ToUpper LLC</title>
+      <Seo page="work" />
       <div className="container">
         <header className="page-header">
           <h1 className="page-title">Our work</h1>

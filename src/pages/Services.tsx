@@ -1,5 +1,6 @@
 import ConsultationCta from '../components/ConsultationCta';
 import { SERVICES } from '../content/services';
+import Seo from '../components/Seo';
 
 const STEPS = [
   { title: 'Free consultation', text: 'We learn about your business, your goals and what is getting in the way.' },
@@ -11,7 +12,7 @@ const STEPS = [
 export default function Services() {
   return (
     <>
-      <title>Services | ToUpper LLC</title>
+      <Seo page="services" />
       <div className="container">
         <header className="page-header">
           <h1 className="page-title">Services</h1>
