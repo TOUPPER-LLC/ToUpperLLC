@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import logo from '../assets/img/Original.png';
+import { LOCATION_LINE } from '../content/seo';
 import { SERVICES } from '../content/services';
 import Seo from '../components/Seo';
 
@@ -24,6 +25,7 @@ export default function Home() {
             See what we do
           </Link>
         </div>
+        <p className="small text-body-secondary mt-4 mb-0">{LOCATION_LINE}</p>
       </section>
 
       <section className="band">

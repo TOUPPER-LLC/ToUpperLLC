@@ -94,5 +94,12 @@ describe('App routes', () => {
     renderAt(path);
     const footer = screen.getByRole('contentinfo');
     expect(footer).toHaveTextContent(`© ${new Date().getFullYear()} ToUpper LLC`);
+    expect(footer).toHaveTextContent('Based in Tampa, Florida, working with clients across the U.S.');
+  });
+
+  it.each(['/', '/about'])('says where the company is based on %s', (path) => {
+    renderAt(path);
+    const main = screen.getByRole('main');
+    expect(within(main).getByText(/Based in Tampa, Florida, working with clients across the U\.S\./i)).toBeInTheDocument();
   });
 });

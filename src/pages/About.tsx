@@ -11,7 +11,8 @@ export default function About() {
           <h1 className="page-title">About ToUpper</h1>
           <p className="page-lede ms-0">
             We&apos;re a small software company that builds websites, apps and the systems behind them, then stays
-            around to keep them running. We&apos;ve been doing it since 2019.
+            around to keep them running. We&apos;ve been doing it since 2019, and
+            we&apos;re based in Tampa, Florida, working with clients across the U.S.
           </p>
 
           <h2>What we do</h2>

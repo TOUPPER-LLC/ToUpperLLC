@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Keep in step with the indexable pages in src/content/seo.ts (a test checks this). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://toupperllc.com/</loc></url>
+  <url><loc>https://toupperllc.com/about</loc></url>
+  <url><loc>https://toupperllc.com/services</loc></url>
+  <url><loc>https://toupperllc.com/work</loc></url>
+  <url><loc>https://toupperllc.com/contact</loc></url>
+  <url><loc>https://toupperllc.com/privacy</loc></url>
+</urlset>
